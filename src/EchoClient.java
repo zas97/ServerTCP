@@ -9,13 +9,23 @@ public class EchoClient {
     private PrintStream socOut;
     private BufferedReader socIn ;
 
+    /**
+     * constructor client
+     * @param username
+     * @param server socket for communication with the server
+     */
     EchoClient(String username, Socket server){
         this.server = server;
         this.username = username;
     }
 
 
-
+    /**
+     * initializes the thread ReadServer
+     * checks constantly if the user has written something
+     * and it sends the messsage to the server
+     * @throws IOException
+     */
     public void startClient() throws IOException{
         Socket echoSocket = server;
         try {
@@ -38,8 +48,7 @@ public class EchoClient {
 
         while (true) {
             line=stdIn.readLine();
-
-            socOut.println(line);
+            SendMessage(line);
             if (line.equals("QUIT")) break;
         }
 
@@ -47,10 +56,24 @@ public class EchoClient {
         socIn.close();
         stdIn.close();
         echoSocket.close();
-
     }
 
+    /**
+     * @param msg message
+     */
+    public void SendMessage(String msg){
+        socOut.println(msg);
+    }
+
+    /**
+     * Thread that listens the server
+     */
     public class ReadServer extends Thread {
+        /**
+         * checks constantly if the server has sent something to this socket
+         * in case of reciving a message it prints it in the terminal and
+         * in the GUI
+         */
         public void run() {
             while (true) {
                 try {
@@ -69,10 +92,6 @@ public class EchoClient {
     public static void main(String[] args) throws IOException {
 
         Socket echoSocket = null;
-        PrintStream socOut = null;
-        BufferedReader stdIn = null;
-        BufferedReader socIn = null;
-
         if (args.length != 2) {
           System.out.println("Usage: java EchoClient <EchoServer host> <EchoServer port>");
           System.exit(1);
@@ -98,9 +117,7 @@ public class EchoClient {
 
     }
 
-    public class listenServer extends Thread{
 
-    }
 }
 
 

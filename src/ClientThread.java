@@ -19,6 +19,13 @@ public class ClientThread
 	private int id;
 	private boolean working;
 
+	/**
+	 * Create a thread for communication with the client
+	 * each thread is identified by an unique id
+	 * @param s socket
+	 * @param server
+	 * @param id
+	 */
 	ClientThread(Socket s,EchoServerMultiThreaded server, int id) {
 		this.clientSocket = s;
 		this.server = server;
@@ -40,11 +47,14 @@ public class ClientThread
 		return username;
 	}
 
-	public int getIdent(){
+	public int getIdentification(){
 		return id;
 	}
 
-
+	/**
+	 * checks constantly if the user is sending messages
+	 * in case of a message it checks if its a command or a plain message
+	 */
 	public void run() {
     	  try {
     		while (working) {
@@ -61,7 +71,7 @@ public class ClientThread
 			  else if(line.charAt(0)=='@'){
 			  	String arr[] = line.split(" ",2);
 			  	String reciver = arr[0].substring(1);
-			  	server.privateMessage(arr[1],username,reciver);
+			  	server.privateMessage(line,username,reciver);
 			  }
 			  else {
 				  server.broadcast(line, username);
@@ -70,8 +80,12 @@ public class ClientThread
     	} catch (Exception e) {
         	System.err.println("Error in Server:" + e);
         }
+        close();
 	}
 
+	/**
+	 * closes the communication with the client
+	 */
 	public void close(){
 		working=false;
 		try{
@@ -98,6 +112,11 @@ public class ClientThread
 
 	}
 
+	/**
+	 * sends a message to the client
+	 * @param msg message
+	 * @return
+	 */
 	public boolean writeMsg(String msg){
 		if(!clientSocket.isConnected()){
 			return false;

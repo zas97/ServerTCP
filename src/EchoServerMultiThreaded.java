@@ -132,7 +132,7 @@ public class EchoServerMultiThreaded  {
     public synchronized void remove(int id){
         for(int i=0;i<clients.size();i++){
             ClientThread c = clients.get(i);
-            if(c.getIdent()==id){
+            if(c.getIdentification()==id){
                 clients.remove(i);
                 broadcast(c.getUsername() +" disconected","Server");
             }
