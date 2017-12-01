@@ -1,0 +1,12 @@
+
+16:35:32 Server: Anonymous1 connected to the server
+16:35:47 Anonymous1: SET USERENAME Joan
+16:35:55 Anonymous1: hey
+16:36:14 Server: Anonymous1 changed name to Joan
+16:36:18 Joan: hey
+16:36:22 Server: Anonymous2 connected to the server
+16:36:31 Anonymous2: hey
+16:41:34 Server: Anonymous1 connected to the server
+16:41:39 Server: Anonymous2 connected to the server
+16:41:43 Anonymous1: hey
+16:41:46 Server: Anonymous3 connected to the server
