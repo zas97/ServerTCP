@@ -17,12 +17,14 @@ public class ClientThread
 	private PrintStream socOut;
 	private BufferedReader socIn;
 	private int id;
+	private boolean working;
 
 	ClientThread(Socket s,EchoServerMultiThreaded server, int id) {
 		this.clientSocket = s;
 		this.server = server;
 		this.id=id;
 		this.username = "Anonymous"+String.valueOf(id);
+		working = true;
 
 		try {
 			socOut = new PrintStream(clientSocket.getOutputStream());
@@ -42,18 +44,14 @@ public class ClientThread
 		return id;
 	}
 
-	//ask de client for the username
 
- 	/**
-  	* receives a request from client then sends an echo to the client
-  	*  the client socket
-  	**/
 	public void run() {
     	  try {
-    		while (true) {
+    		while (working) {
     		  String line = socIn.readLine();
     		  if(line.equals("QUIT")){
 				  server.remove(id);
+				  working=false;
 			  }
 			  else if(line.startsWith("SET USERNAME ")){
     		  	String aux[]=line.split(" ");
@@ -75,6 +73,7 @@ public class ClientThread
 	}
 
 	public void close(){
+		working=false;
 		try{
 			if(socOut != null){
 				socOut.close();

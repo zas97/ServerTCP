@@ -17,21 +17,22 @@ import java.util.Scanner;
 
 public class EchoServerMultiThreaded  {
   
- 	/**
-  	* main method
-	* @param EchoServer port
-  	* 
-  	**/
+
  	private ArrayList<ClientThread> clients;
  	private int port;
  	private int nextId;
  	private String history;
  	private String historyFile;
 
-
-    public EchoServerMultiThreaded(int p){
+    /**
+     * Constructor of the server
+     * initializes the list of threads for the clients
+     * reads the persistent history allocated in historyfile
+     * @param port
+     */
+    public EchoServerMultiThreaded(int port){
         clients = new ArrayList<ClientThread>();
-        port=p;
+        this.port=port;
         nextId = 1;
         historyFile="history.txt";
         try {
@@ -43,10 +44,13 @@ public class EchoServerMultiThreaded  {
 
     }
 
+    /**
+     * starts listening for clients trying to connect
+     * when a client connects it creates a thread for the client
+     * and it sends the history of the chat to the client
+     */
     public void start(){
         ServerSocket listenSocket;
-
-
         try {
             listenSocket = new ServerSocket(port); //port
             System.out.println("Server ready...");
@@ -67,6 +71,11 @@ public class EchoServerMultiThreaded  {
         }
     }
 
+    /**Sends a message to every user
+     * this message is called by the ClientThread
+     * @param msg message to send
+     * @param sender username of the person sending the message
+     */
     public synchronized void broadcast(String msg,String sender) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
@@ -93,6 +102,12 @@ public class EchoServerMultiThreaded  {
         }
     }
 
+    /**
+     * sends a message to one user
+     * @param msg message
+     * @param sender username of the person sending
+     * @param reciver username of the person who has to recive it
+     */
     public void privateMessage(String msg,String sender,String reciver){
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
@@ -110,6 +125,10 @@ public class EchoServerMultiThreaded  {
         }
     }
 
+    /**
+     * removes client
+     * @param id of the client
+     */
     public synchronized void remove(int id){
         for(int i=0;i<clients.size();i++){
             ClientThread c = clients.get(i);

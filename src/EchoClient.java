@@ -1,14 +1,5 @@
-/***
- * EchoClient
- * Example of a TCP client 
- * Date: 10/01/04
- * Authors:
- */
-package stream;
-
 import java.io.*;
 import java.net.*;
-
 
 
 public class EchoClient {
@@ -16,7 +7,6 @@ public class EchoClient {
     private String username;
     private Socket server;
     private PrintStream socOut;
-    private BufferedReader stdIn ;
     private BufferedReader socIn ;
 
     EchoClient(String username, Socket server){
@@ -28,11 +18,9 @@ public class EchoClient {
 
     public void startClient() throws IOException{
         Socket echoSocket = server;
-
         try {
             socIn = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
             socOut = new PrintStream(echoSocket.getOutputStream());
-            stdIn = new BufferedReader(new InputStreamReader(System.in));
         }
 
         catch (UnknownHostException e) {
@@ -46,11 +34,13 @@ public class EchoClient {
         ReadServer rs = new ReadServer();
         rs.start();
         String line;
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 
         while (true) {
             line=stdIn.readLine();
-            if (line.equals(".")) break;
+
             socOut.println(line);
+            if (line.equals("QUIT")) break;
         }
 
         socOut.close();
