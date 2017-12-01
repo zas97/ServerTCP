@@ -68,6 +68,10 @@ public class ClientThread
     		  	server.broadcast(username +" changed name to "+aux[2],"Server");
     		  	username = aux[2];
 			  }
+			  else if(line.equals("USERS?")){
+			  	String listUsers=server.listUsernames();
+			  	server.broadcast(listUsers,"Server");
+			  }
 			  else if(line.charAt(0)=='@'){
 			  	String arr[] = line.split(" ",2);
 			  	String reciver = arr[0].substring(1);

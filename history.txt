@@ -1,24 +1,14 @@
 
-20:45:27 Server: Anonymous1 connected to the server
-20:45:35 Anonymous1: hola
-20:45:40 Anonymous1: que tal
-20:45:48 Server: Anonymous2 connected to the server
-20:45:54 Anonymous2: hola
-20:46:24 Server: Anonymous2 changed name to Joan
-20:54:36 Server: Joan changed name to Pozo
-20:54:47 Pozo: hola
-20:54:50 Pozo: hola
-21:30:43 Server: Anonymous1 connected to the server
-21:30:47 Anonymous1: gey
-21:30:54 Server: Anonymous2 connected to the server
-21:33:01 Server: Anonymous1 connected to the server
-21:33:06 Server: Anonymous2 connected to the server
-21:43:09 Server: Anonymous1 connected to the server
-21:43:12 Anonymous1: hey
-21:43:17 Server: Anonymous2 connected to the server
-21:43:19 Anonymous2: gola
-21:43:22 Anonymous2: que tal
-21:43:32 Anonymous1: bien y tu?
-21:45:29 Server: Anonymous1 connected to the server
-21:45:36 Anonymous1: yo bine
-21:45:41 Anonymous1: a si?
+22:12:07 Server: Anonymous1 connected to the server
+22:12:13 Server: Anonymous2 connected to the server
+22:12:25 Server: Anonymous3 connected to the server
+22:12:31 Anonymous3: hey
+22:12:43 Server: Anonymous3 changed name to Joan
+22:12:50 Server: 
+Anonymous1
+Anonymous2
+Joan
+22:12:59 Server: 
+Anonymous1
+Anonymous2
+Joan

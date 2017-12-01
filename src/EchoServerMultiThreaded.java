@@ -108,7 +108,7 @@ public class EchoServerMultiThreaded  {
      * @param sender username of the person sending
      * @param reciver username of the person who has to recive it
      */
-    public void privateMessage(String msg,String sender,String reciver){
+    public synchronized void privateMessage(String msg,String sender,String reciver){
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String time = sdf.format(new Date());
         msg = time + " "+sender+": " + msg;
@@ -123,6 +123,17 @@ public class EchoServerMultiThreaded  {
                 }
             }
         }
+    }
+
+    public  String listUsernames(){
+        String list="";
+        int len=clients.size();
+        for(int i=0;i<len;i++){
+            list += "\n"+clients.get(i).getUsername();
+        }
+        return list;
+
+
     }
 
     /**
