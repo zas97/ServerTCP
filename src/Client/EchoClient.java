@@ -1,22 +1,27 @@
+package Client;
+
 import java.io.*;
 import java.net.*;
 
 
 public class EchoClient {
 
-    private String username;
+
     private Socket server;
     private PrintStream socOut;
-    private BufferedReader socIn ;
+    private BufferedReader socIn;
+    private ClientInterface gui;
+    private String host;
+    private boolean running;
 
     /**
      * constructor client
-     * @param username
      * @param server socket for communication with the server
      */
-    EchoClient(String username, Socket server){
+    EchoClient(Socket server, String host){
         this.server = server;
-        this.username = username;
+        this.host=host;
+
     }
 
 
@@ -27,6 +32,7 @@ public class EchoClient {
      * @throws IOException
      */
     public void startClient() throws IOException{
+        running = true;
         Socket echoSocket = server;
         try {
             socIn = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
@@ -41,17 +47,21 @@ public class EchoClient {
                     + "the connection to:");
             System.exit(1);
         }
+        gui = new ClientInterface(this,host,socIn.readLine());
+
         ReadServer rs = new ReadServer();
         rs.start();
         String line;
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 
-        while (true) {
-            line=stdIn.readLine();
-            SendMessage(line);
-            if (line.equals("QUIT")) break;
+        while (running) {
+            try {
+                line = stdIn.readLine();
+                SendMessage(line);
+            } catch(IOException e){
+                break;
+            }
         }
-
         socOut.close();
         socIn.close();
         stdIn.close();
@@ -63,6 +73,9 @@ public class EchoClient {
      */
     public void SendMessage(String msg){
         socOut.println(msg);
+        if(msg.equals("QUIT")){
+            running = false;
+        }
     }
 
     /**
@@ -75,13 +88,23 @@ public class EchoClient {
          * in the GUI
          */
         public void run() {
-            while (true) {
+            running = true;
+            while (running) {
+
                 try {
                     String line = socIn.readLine();
                     System.out.println(line);
-                } catch (IOException e) {
-                    break;
+                    String parts[] = line.split(" ");
+                    if(parts[0].equals("USERS:")){
+                        gui.updateUsers(parts);
+                    }
+                    else {
+                        gui.printMessage(line);
+                    }
 
+                } catch (IOException e) {
+                    System.out.println(e);
+                    break;
                 }
             }
         }
@@ -93,7 +116,7 @@ public class EchoClient {
 
         Socket echoSocket = null;
         if (args.length != 2) {
-          System.out.println("Usage: java EchoClient <EchoServer host> <EchoServer port>");
+          System.out.println("Usage: java Client.EchoClient <EchoServer host> <EchoServer port>");
           System.exit(1);
         }
 
@@ -110,7 +133,7 @@ public class EchoClient {
             System.exit(1);
         }
 
-        EchoClient c = new EchoClient("Joan",echoSocket);
+        EchoClient c = new EchoClient(echoSocket,args[0]);
         c.startClient();
                              
 

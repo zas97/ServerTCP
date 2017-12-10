@@ -1,19 +1,20 @@
-/***
+package Server; /***
  * EchoServer
  * Example of a TCP server
  * Date: 10/01/04
  * Authors:
  */
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
+
 
 public class EchoServerMultiThreaded  {
   
@@ -36,7 +37,7 @@ public class EchoServerMultiThreaded  {
         nextId = 1;
         historyFile="history.txt";
         try {
-            history = new Scanner(new File(historyFile)).useDelimiter("\\A").next();
+            history = new String ( Files.readAllBytes( Paths.get(historyFile) ) );
         }
         catch(IOException e1){
             System.out.println("error reading history");
@@ -72,7 +73,7 @@ public class EchoServerMultiThreaded  {
     }
 
     /**Sends a message to every user
-     * this message is called by the ClientThread
+     * this message is called by the Server.ClientThread
      * @param msg message to send
      * @param sender username of the person sending the message
      */
@@ -125,11 +126,12 @@ public class EchoServerMultiThreaded  {
         }
     }
 
+
     public  String listUsernames(){
         String list="";
         int len=clients.size();
         for(int i=0;i<len;i++){
-            list += "\n"+clients.get(i).getUsername();
+            list += clients.get(i).getUsername()+" ";
         }
         return list;
 

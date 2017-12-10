@@ -1,5 +1,5 @@
-/***
- * ClientThread
+package Server; /***
+ * Server.ClientThread
  * Example of a TCP server
  * Date: 14/12/08
  * Authors:
@@ -40,6 +40,8 @@ public class ClientThread
 		catch (Exception e) {
 			System.err.println("Error in Server:" + e);
 		}
+		//sends the username to the client
+		writeMsg(username);
 
 	}
 
@@ -52,8 +54,10 @@ public class ClientThread
 	}
 
 	/**
+	 * it sends the username to the client and
 	 * checks constantly if the user is sending messages
 	 * in case of a message it checks if its a command or a plain message
+	 * and acts accordingly
 	 */
 	public void run() {
     	  try {
@@ -70,13 +74,16 @@ public class ClientThread
 			  }
 			  else if(line.equals("USERS?")){
 			  	String listUsers=server.listUsernames();
-			  	server.broadcast(listUsers,"Server");
+			  	writeMsg("USERS: "+listUsers);
 			  }
 			  else if(line.charAt(0)=='@'){
 			  	String arr[] = line.split(" ",2);
 			  	String reciver = arr[0].substring(1);
 			  	server.privateMessage(line,username,reciver);
 			  }
+			  else if(line.equals("QUIT")){
+			      close();
+              }
 			  else {
 				  server.broadcast(line, username);
 			  }
@@ -112,6 +119,7 @@ public class ClientThread
 			}
 		}
 		catch(Exception e) {}
+		server.remove(id);
 
 
 	}
