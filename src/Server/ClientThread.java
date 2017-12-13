@@ -1,15 +1,13 @@
-package Server; /***
- * Server.ClientThread
- * Example of a TCP server
- * Date: 14/12/08
- * Authors:
- */
+package Server;
 
 import java.io.*;
 import java.net.*;
 
-public class ClientThread
-	extends Thread {
+/**
+ * Thread that constantly listens to one client and calls
+ * the methods of server according to the messages sent by the user
+ */
+public class ClientThread extends Thread {
 	
 	private Socket clientSocket;
 	private String username;
@@ -22,9 +20,9 @@ public class ClientThread
 	/**
 	 * Create a thread for communication with the client
 	 * each thread is identified by an unique id
-	 * @param s socket
-	 * @param server
-	 * @param id
+	 * @param s socket of the client
+	 * @param server object server
+	 * @param id id that identifies uniquely this thread
 	 */
 	ClientThread(Socket s,EchoServerMultiThreaded server, int id) {
 		this.clientSocket = s;
@@ -45,19 +43,29 @@ public class ClientThread
 
 	}
 
+    /**
+     *
+     * @return name of the user in this thread
+     */
 	public String getUsername(){
 		return username;
 	}
 
+    /**
+     *
+     * @return unique id of the thread
+     */
 	public int getIdentification(){
 		return id;
 	}
 
 	/**
-	 * it sends the username to the client and
-	 * checks constantly if the user is sending messages
-	 * in case of a message it checks if its a command or a plain message
-	 * and acts accordingly
+	 * It constantly listens to the client messages, depending on the client message it can
+     * do 3 things
+     * QUIT: Stops the connection with the client
+     * SET USERNAME {@code <username>}: sets the name of the user to 'username'
+     * USERS?: Sends a list of the users to the client
+     * {@code @<username>}:Changes the username of the user to {@code @<username>}
 	 */
 	public void run() {
     	  try {
@@ -81,9 +89,6 @@ public class ClientThread
 			  	String reciver = arr[0].substring(1);
 			  	server.privateMessage(line,username,reciver);
 			  }
-			  else if(line.equals("QUIT")){
-			      close();
-              }
 			  else {
 				  server.broadcast(line, username);
 			  }
@@ -125,7 +130,7 @@ public class ClientThread
 	}
 
 	/**
-	 * sends a message to the client
+	 * sends a message to the client using the socket
 	 * @param msg message
 	 * @return
 	 */

@@ -1,9 +1,4 @@
-package Server; /***
- * EchoServer
- * Example of a TCP server
- * Date: 10/01/04
- * Authors:
- */
+package Server;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-
+/**
+ * Server for a chat system that allows sending messages to all users or to just one user.
+ * It contains a history with all the previously written public messages and it sends this history
+ * to users that are connecting. The history is persistent, that means that if the server is stopped this
+ * history is kept in the memory and will reappear once we restart the server
+ */
 public class EchoServerMultiThreaded  {
   
 
@@ -28,7 +28,7 @@ public class EchoServerMultiThreaded  {
     /**
      * Constructor of the server
      * initializes the list of threads for the clients
-     * reads the persistent history allocated in historyfile
+     * reads the persistent history allocated in history.txt.
      * @param port
      */
     public EchoServerMultiThreaded(int port){
@@ -48,7 +48,7 @@ public class EchoServerMultiThreaded  {
     /**
      * starts listening for clients trying to connect
      * when a client connects it creates a thread for the client
-     * and it sends the history of the chat to the client
+     * and it sends the history of the chat to that client
      */
     public void start(){
         ServerSocket listenSocket;
@@ -72,7 +72,9 @@ public class EchoServerMultiThreaded  {
         }
     }
 
-    /**Sends a message to every user
+    /**
+     * Sends a message to every user with the time that that message has been sent
+     * and the username who has send it. It also saves this message in the history.
      * this message is called by the Server.ClientThread
      * @param msg message to send
      * @param sender username of the person sending the message
@@ -104,10 +106,12 @@ public class EchoServerMultiThreaded  {
     }
 
     /**
-     * sends a message to one user
+     * Sends a message to users with the name specified, this message is not saved in the history.
+     * Note that more than one user can have the same name so the message can be received by more than one user,
+     * this can be useful to users that want to talk in a group by changing all their names to the same name.
      * @param msg message
      * @param sender username of the person sending
-     * @param reciver username of the person who has to recive it
+     * @param reciver username of the person/s who have to receive it
      */
     public synchronized void privateMessage(String msg,String sender,String reciver){
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -126,8 +130,11 @@ public class EchoServerMultiThreaded  {
         }
     }
 
-
-    public  String listUsernames(){
+    /**
+     *
+     * @return String with the names of the users separated by an space
+     */
+    public String listUsernames(){
         String list="";
         int len=clients.size();
         for(int i=0;i<len;i++){
@@ -139,8 +146,8 @@ public class EchoServerMultiThreaded  {
     }
 
     /**
-     * removes client
-     * @param id of the client
+     * removes client from the server
+     * @param id of the client that needs to be removed
      */
     public synchronized void remove(int id){
         for(int i=0;i<clients.size();i++){
@@ -153,8 +160,15 @@ public class EchoServerMultiThreaded  {
     }
 
 
-
+    /**
+     * Starts the server in the specified port
+     * @param args
+     */
     public static void main(String args[]){
+        if (args.length != 1) {
+            System.out.println("Usage: java Server.EchoServerMultiThreaded <EchoServer port>");
+            System.exit(1);
+        }
         int port = Integer.parseInt(args[0]);
         EchoServerMultiThreaded server = new EchoServerMultiThreaded(port);
         server.start();
